@@ -82,7 +82,12 @@ const Home: NextPage = () => {
       add(glyph.id);
     });
 
-    let copyString = `-- First two are belt buckle and bags ...\n.additem 23162 4\n.additem 41611 1\n\n`;
+    let copyString = `-- belt buckle and bags\n.additem 23162 4\n.additem 41611 1\n\n`;
+    copyString = copyString.concat(
+      '-- gnomish cloaking device\n.additem 4397\n\n',
+      '-- reputations\n.modify reputation 1119 exalted\n.modify reputation 1098 exalted\n.modify reputation 1090 exalted\n\n',
+      '-- mats for nitro boots & frag bet & hyperspeed accel\n.additem 6219\n.additem 36916 8\n.additem 39690 14\n.additem 39681 6\n.additem 36913 6\n.additem 37700 4\n\n'
+    );
     const keys = Object.keys(values);
 
     let lines = 0;
