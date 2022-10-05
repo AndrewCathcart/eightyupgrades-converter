@@ -9,14 +9,17 @@ type EightyUpgradesExportData = {
   items: [
     {
       id: number;
+      name: string;
       enchant?: {
         id: number;
-        itemId: number;
-        spellId: number;
+        name: string;
+        itemId?: number;
+        spellId?: number;
       };
       gems?: [
         {
           id: number;
+          name: string;
         }
       ];
     }
@@ -52,33 +55,31 @@ const Home: NextPage = () => {
         add(item.id);
       }
 
-      (item.gems || []).map((gem: any) => {
+      (item.gems || []).map((gem) => {
         if (gem?.id) {
           add(gem.id);
         }
       });
 
-      if (item.enchant) {
-        if (item.enchant.itemId) {
-          add(item.enchant.itemId);
-        } else {
-          try {
-            const response = await fetch(`${DB_URL}${item.enchant.spellId}`);
-            const body = await response.text();
-            const substr = body.substr(body.indexOf('Scroll of') - 70, 65);
-            const matches = substr.match(/\[(.*?)\]/);
-            const id = matches ? matches[1] : null;
-            if (id && !isNaN(+id)) {
-              add(+id);
-            }
-          } catch (err) {
-            console.warn(`Could not fetch ${item.enchant.spellId}`, err);
+      if (item?.enchant?.itemId) {
+        add(item.enchant.itemId);
+      } else if (item?.enchant?.spellId) {
+        try {
+          const response = await fetch(`${DB_URL}${item.enchant.spellId}`);
+          const body = await response.text();
+          const substr = body.substr(body.indexOf('Scroll of') - 70, 65);
+          const matches = substr.match(/\[(.*?)\]/);
+          const id = matches ? matches[1] : null;
+          if (id && !isNaN(+id)) {
+            add(+id);
           }
+        } catch (err) {
+          console.warn(`Could not fetch ${item.enchant.spellId}`, err);
         }
       }
     }
 
-    (data.glyphs || []).map((glyph: any) => {
+    (data.glyphs || []).map((glyph) => {
       add(glyph.id);
     });
 
